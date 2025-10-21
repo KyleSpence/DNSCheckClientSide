@@ -1,0 +1,880 @@
+/* 
+  Hugo PaperMod Theme Adaptation for DNS Checker
+  Based on PaperMod v8+ - License: MIT
+*/
+
+:root {
+    /* Layout Variables */
+    --gap: 24px;
+    --content-gap: 20px;
+    --nav-width: 1024px;
+    --main-width: 720px;
+    --header-height: 60px;
+    --footer-height: 60px;
+    --radius: 8px;
+    
+    /* Light Theme Colors */
+    --theme: rgb(255, 255, 255);
+    --entry: rgb(255, 255, 255);
+    --primary: rgb(30, 30, 30);
+    --secondary: rgb(108, 108, 108);
+    --tertiary: rgb(214, 214, 214);
+    --content: rgb(31, 31, 31);
+    --code-block-bg: rgb(28, 29, 33);
+    --code-bg: rgb(245, 245, 245);
+    --border: rgb(238, 238, 238);
+    
+    /* DNS Checker Specific Colors */
+    --success-color: #059669;
+    --warning-color: #d97706;
+    --error-color: #dc2626;
+    --info-color: #0ea5e9;
+}
+
+/* Dark Theme */
+.dark {
+    --theme: rgb(29, 30, 32);
+    --entry: rgb(46, 46, 51);
+    --primary: rgb(218, 218, 219);
+    --secondary: rgb(155, 156, 157);
+    --tertiary: rgb(65, 66, 68);
+    --content: rgb(196, 196, 197);
+    --code-block-bg: rgb(46, 46, 51);
+    --code-bg: rgb(55, 56, 62);
+    --border: rgb(51, 51, 51);
+}
+
+/* Base Styles */
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-tap-highlight-color: transparent;
+    overflow-y: scroll;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'segoe ui', Roboto, Oxygen, Ubuntu, Cantarell, 'open sans', 'helvetica neue', sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    word-break: break-word;
+    background: var(--theme);
+    color: var(--primary);
+    margin: 0;
+}
+
+a, button, h1, h2, h3, h4, h5, h6 {
+    color: var(--primary);
+}
+
+a {
+    text-decoration: none;
+}
+
+figure, ul {
+    margin: 0;
+}
+
+ul {
+    padding: 0;
+}
+
+/* Layout */
+.container {
+    max-width: calc(var(--main-width) + var(--gap) * 2);
+    margin: 0 auto;
+    padding: 0 var(--gap);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+h1 { font-size: 40px; }
+h2 { font-size: 32px; }
+h3 { font-size: 24px; }
+h4 { font-size: 16px; }
+h5 { font-size: 14px; }
+h6 { font-size: 12px; }
+
+/* Header */
+.header {
+    background: var(--theme);
+    border-bottom: 1px solid var(--border);
+}
+
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: calc(var(--nav-width) + var(--gap) * 2);
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+    line-height: var(--header-height);
+}
+
+.nav a {
+    display: block;
+}
+
+.logo {
+    display: flex;
+    flex-wrap: inherit;
+    margin: auto var(--gap);
+}
+
+.logo a {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.site-title {
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    font-size: 34px;
+    line-height: 1.3;
+}
+
+.site-description {
+    color: var(--secondary);
+    margin: 14px 0;
+    font-size: 16px;
+}
+
+/* Main Content */
+.main {
+    position: relative;
+    min-height: calc(100vh - var(--header-height) - var(--footer-height));
+    max-width: calc(var(--main-width) + var(--gap) * 2);
+    margin: auto;
+    padding: var(--gap);
+}
+
+.main-content {
+    padding: var(--content-gap) 0;
+}
+
+/* Home Info Section */
+.first-entry {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 320px;
+    margin: var(--gap) 0 calc(var(--gap) * 2);
+}
+
+.first-entry .entry-header {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.first-entry .entry-header h1 {
+    font-size: 34px;
+    line-height: 1.3;
+}
+
+.first-entry .entry-content {
+    margin: 14px 0;
+    font-size: 16px;
+    -webkit-line-clamp: 3;
+}
+
+.home-info .entry-content {
+    -webkit-line-clamp: unset;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: var(--content-gap);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--primary);
+    font-size: 16px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--tertiary);
+    border-radius: var(--radius);
+    font-size: 16px;
+    color: var(--primary);
+    background: var(--theme);
+    font-weight: 500;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--secondary);
+}
+
+.form-input::placeholder {
+    color: var(--secondary);
+    font-weight: 400;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    min-height: 44px;
+    background: var(--code-bg);
+    color: var(--primary);
+}
+
+.btn:hover {
+    background: var(--border);
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: var(--theme);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background: var(--secondary);
+    border-color: var(--secondary);
+    color: var(--theme);
+}
+
+.btn-secondary {
+    background: var(--tertiary);
+    color: var(--primary);
+    border-color: var(--tertiary);
+}
+
+.btn-secondary:hover {
+    background: var(--border);
+}
+
+/* Cards and Entries */
+.card, .post-entry {
+    position: relative;
+    margin-bottom: var(--gap);
+    padding: var(--gap);
+    background: var(--entry);
+    border-radius: var(--radius);
+    transition: transform 0.1s;
+    border: 1px solid var(--border);
+}
+
+.card:active, .post-entry:active {
+    transform: scale(0.96);
+}
+
+.card-header, .entry-header {
+    margin-bottom: var(--content-gap);
+}
+
+.card-header h2, .entry-header h2 {
+    font-size: 24px;
+    line-height: 1.3;
+    margin-bottom: 8px;
+}
+
+.card-body, .entry-content {
+    margin: 8px 0;
+    color: var(--secondary);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.entry-footer {
+    color: var(--secondary);
+    font-size: 13px;
+    margin-top: var(--content-gap);
+}
+
+/* Footer */
+.footer, .site-footer {
+    max-width: calc(var(--main-width) + var(--gap) * 2);
+    margin: auto;
+    padding: calc((var(--footer-height) - var(--gap)) / 2) var(--gap);
+    text-align: center;
+    line-height: 24px;
+    font-size: 12px;
+    color: var(--secondary);
+    border-top: 1px solid var(--border);
+}
+
+.footer span {
+    margin-inline-start: 1px;
+    margin-inline-end: 1px;
+}
+
+.footer a {
+    color: inherit;
+    border-bottom: 1px solid var(--secondary);
+}
+
+.footer a:hover {
+    border-bottom: 1px solid var(--primary);
+    color: var(--primary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 0.75rem;
+    }
+    
+    .site-header {
+        padding: 1.5rem 0;
+    }
+    
+    .main-content {
+        padding: 2rem 0;
+    }
+    
+    h1 { font-size: 1.875rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+}
+/* D
+NS Checker Specific Styles */
+
+/* DNS Results Container */
+.dns-results {
+    margin-top: var(--content-gap);
+}
+
+.dns-record-section {
+    margin-bottom: var(--gap);
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+/* Collapsible Sections */
+.collapsible-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px var(--gap);
+    background: var(--code-bg);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    user-select: none;
+}
+
+.collapsible-header:hover {
+    background: var(--tertiary);
+}
+
+.collapsible-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0;
+}
+
+.collapsible-toggle {
+    font-size: 20px;
+    color: var(--secondary);
+    transition: transform 0.2s ease;
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.collapsible-content.expanded {
+    max-height: 1000px;
+}
+
+.collapsible-body {
+    padding: var(--gap);
+}
+
+/* DNS Record Display */
+.dns-record {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.dns-record:last-child {
+    border-bottom: none;
+}
+
+.dns-record-name {
+    font-weight: 500;
+    color: var(--primary);
+    word-break: break-all;
+    flex: 1;
+    min-width: 200px;
+}
+
+.dns-record-value {
+    color: var(--content);
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 14px;
+    word-break: break-all;
+    flex: 2;
+    min-width: 200px;
+}
+
+.dns-record-ttl {
+    color: var(--secondary);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* Status Indicators */
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-success {
+    background: rgba(5, 150, 105, 0.1);
+    color: var(--success-color);
+}
+
+.status-warning {
+    background: rgba(217, 119, 6, 0.1);
+    color: var(--warning-color);
+}
+
+.status-error {
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--error-color);
+}
+
+.status-info {
+    background: rgba(14, 165, 233, 0.1);
+    color: var(--info-color);
+}
+
+/* Error and Warning Messages */
+.error-message, .warning-message, .info-message {
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    margin: 12px 0;
+    border-left: 4px solid;
+}
+
+.error-message {
+    background: rgba(220, 38, 38, 0.05);
+    border-left-color: var(--error-color);
+    color: var(--error-color);
+}
+
+.warning-message {
+    background: rgba(217, 119, 6, 0.05);
+    border-left-color: var(--warning-color);
+    color: var(--warning-color);
+}
+
+.info-message {
+    background: rgba(14, 165, 233, 0.05);
+    border-left-color: var(--info-color);
+    color: var(--info-color);
+}
+
+/* Loading States */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--tertiary);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--secondary);
+    font-style: italic;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: var(--gap) * 2;
+    color: var(--secondary);
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+/* Record Count Badge */
+.record-count {
+    background: var(--tertiary);
+    color: var(--primary);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Theme Toggle Support */
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: var(--radius);
+    color: var(--secondary);
+    transition: color 0.15s ease;
+}
+
+.theme-toggle:hover {
+    color: var(--primary);
+}
+
+/* Dark theme adjustments for DNS checker */
+.dark .dns-record-section {
+    background: var(--entry);
+}
+
+.dark .collapsible-header {
+    background: var(--code-bg);
+}
+
+.dark .collapsible-header:hover {
+    background: var(--tertiary);
+}/* Resp
+onsive Design */
+@media screen and (max-width: 768px) {
+    :root {
+        --gap: 14px;
+    }
+    
+    .container {
+        padding: 0 var(--gap);
+    }
+    
+    .first-entry {
+        min-height: 260px;
+    }
+    
+    .footer {
+        padding: calc((var(--footer-height) - var(--gap) - 10px) / 2) var(--gap);
+    }
+    
+    .dns-record {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .dns-record-name,
+    .dns-record-value {
+        min-width: 100%;
+        flex: none;
+    }
+    
+    .collapsible-header {
+        padding: 12px 16px;
+    }
+    
+    .collapsible-title {
+        font-size: 16px;
+    }
+    
+    h1 { font-size: 28px; }
+    h2 { font-size: 24px; }
+    h3 { font-size: 20px; }
+}
+
+@media screen and (max-width: 480px) {
+    .form-input {
+        padding: 10px 12px;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .btn {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    
+    .dns-record-value {
+        font-size: 12px;
+    }
+    
+    .collapsible-body {
+        padding: 16px;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --border: #000000;
+        --tertiary: #cccccc;
+    }
+    
+    .dark {
+        --border: #ffffff;
+        --tertiary: #333333;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .collapsible-toggle,
+    .collapsible-content,
+    .btn,
+    .post-entry,
+    .card {
+        transition: none;
+    }
+    
+    .loading-spinner {
+        animation: none;
+    }
+}/*
+ Additional Hugo Theme Components */
+
+/* Theme Toggle Button Styling */
+body.dark #moon {
+    vertical-align: middle;
+    display: none;
+}
+
+body:not(.dark) #sun {
+    display: none;
+}
+
+#theme-toggle {
+    font-size: 26px;
+    margin: auto 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--secondary);
+    transition: color 0.15s ease;
+}
+
+#theme-toggle:hover {
+    color: var(--primary);
+}
+
+/* Logo and Navigation Styling */
+.logo a {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.logo-switches {
+    display: inline-flex;
+    margin: auto 4px;
+    flex-wrap: inherit;
+}
+
+/* Enhanced Button Styling */
+.btn:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn:disabled:hover {
+    transform: none;
+    background: var(--code-bg);
+}
+
+/* Form Enhancements */
+.form-group {
+    position: relative;
+}
+
+.input-validation {
+    margin-top: 4px;
+    font-size: 14px;
+    min-height: 20px;
+}
+
+.input-validation.valid {
+    color: var(--success-color);
+}
+
+.input-validation.invalid {
+    color: var(--error-color);
+}
+
+/* Results Header */
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.entry-header h2 {
+    margin: 0;
+    flex: 1;
+}
+
+/* DNS Record List Styling */
+.dns-record-list {
+    border-top: 1px solid var(--border);
+}
+
+.dns-record:first-child {
+    border-top: none;
+}
+
+/* Enhanced Status Indicators */
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Error Stats Styling */
+.error-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.stat.critical {
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--error-color);
+}
+
+.stat.warning {
+    background: rgba(217, 119, 6, 0.1);
+    color: var(--warning-color);
+}
+
+.stat.info {
+    background: rgba(14, 165, 233, 0.1);
+    color: var(--info-color);
+}
+
+/* Enhanced Loading States */
+.btn-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Smooth Transitions */
+.dns-record-section,
+.post-entry,
+.card {
+    transition: all 0.2s ease;
+}
+
+.dns-record-section:hover {
+    border-color: var(--secondary);
+}
+
+/* Focus Management */
+.collapsible-header:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+    .header,
+    .footer,
+    #theme-toggle,
+    .btn {
+        display: none;
+    }
+    
+    .collapsible-content {
+        max-height: none !important;
+    }
+    
+    .dns-record-section {
+        break-inside: avoid;
+    }
+}
+
+/* Animation Performance */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

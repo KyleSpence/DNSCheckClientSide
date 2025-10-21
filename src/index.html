@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="index, follow">
+    <title>DNS Checker - ElasticStrike</title>
+    <meta name="description" content="DNS record analysis tool">
+    <meta name="author" content="ElasticStrike">
+    <link rel="canonical" href="https://dns.elasticstrike.com/">
+
+    <!-- Hugo Theme CSS -->
+    <link rel="stylesheet" href="css/hugo-theme.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#2e2e33">
+    <meta name="msapplication-TileColor" content="#2e2e33">
+
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://cloudflare-dns.com https://dns.google https://dns.quad9.net">
+
+    <!-- Dark mode support -->
+    <noscript>
+        <style>
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --theme: rgb(29, 30, 32);
+                    --entry: rgb(46, 46, 51);
+                    --primary: rgb(218, 218, 219);
+                    --secondary: rgb(155, 156, 157);
+                    --tertiary: rgb(65, 66, 68);
+                    --content: rgb(196, 196, 197);
+                    --code-block-bg: rgb(46, 46, 51);
+                    --code-bg: rgb(55, 56, 62);
+                    --border: rgb(51, 51, 51);
+                }
+            }
+        </style>
+    </noscript>
+</head>
+
+<body class="list" id="top">
+    <script>
+        if (localStorage.getItem("pref-theme") === "dark") {
+            document.body.classList.add('dark');
+        } else if (localStorage.getItem("pref-theme") === "light") {
+            document.body.classList.remove('dark')
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add('dark');
+        }
+    </script>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <a href="https://elasticstrike.com/" accesskey="h" title="ElasticStrike (Alt + H)">ElasticStrike</a>
+                <div class="logo-switches">
+                    <button id="theme-toggle" accesskey="t" title="Toggle Theme (Alt + T)" aria-label="Toggle theme">
+                        <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <article class="first-entry home-info">
+            <header class="entry-header">
+                <h1 class="site-title">DNS Checker</h1>
+            </header>
+            <div class="entry-content">
+                <p>Comprehensive DNS record analysis tool with error detection capabilities. Enter a domain name or subdomain below to analyze its DNS configuration. Issue analysis is performed for main domains only.</p>
+            </div>
+        </article>
+
+        <article class="post-entry">
+            <div class="entry-content">
+                <form id="dns-form" class="dns-form">
+                    <div class="form-group">
+                        <label for="domain-input" class="form-label">Enter Domain Name</label>
+                        <div class="input-button-group">
+                            <input type="text" id="domain-input" class="form-input" placeholder="example.com or subdomain.example.com" required
+                                pattern="^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$">
+                            <button type="submit" class="btn btn-primary" id="analyze-btn">
+                                <span class="btn-text">Analyze DNS</span>
+                                <span class="btn-loading" style="display: none;">
+                                    <span class="loading-spinner"></span>
+                                    Analyzing...
+                                </span>
+                            </button>
+                        </div>
+                        <div class="input-validation" id="domain-validation"></div>
+                    </div>
+                </form>
+            </div>
+        </article>
+
+        <section class="dns-results-section" id="results-section" style="display: none;">
+            <article class="post-entry">
+                <header class="entry-header">
+                    <h2 id="results-title">DNS Analysis Results</h2>
+                    <button class="btn btn-secondary" id="clear-results">Clear Results</button>
+                </header>
+
+                <div class="entry-content">
+                    <div class="error-summary" id="error-summary" style="display: none;">
+                        <h3>Issues Detected</h3>
+                        <div id="error-list"></div>
+                    </div>
+
+                    <div class="dns-results" id="dns-records">
+                        <!-- DNS records will be populated here -->
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section class="loading-section" id="loading-section" style="display: none;">
+            <article class="post-entry">
+                <div class="entry-content">
+                    <div class="loading-text">
+                        <span class="loading-spinner"></span>
+                        Analyzing DNS records...
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <span>&copy; 2025 ElasticStrike · DNS Checker Tool</span>
+        <span>
+            Powered by
+            <a href="https://elasticstrike.com/" rel="noopener" target="_blank">ElasticStrike</a>
+        </span>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/dns-query.js"></script>
+    <script src="js/error-detector.js"></script>
+    <script src="js/theme-adapter.js"></script>
+    <script src="js/ui-controller.js"></script>
+
+    <!-- Performance optimizations loaded -->
+    <script>
+        // Performance monitoring
+        if (window.performance && window.performance.mark) {
+            window.performance.mark('dns-checker-loaded');
+        }
+        
+        // Cache status display (for debugging)
+        if (window.location.search.includes('debug=true')) {
+            setInterval(() => {
+                if (window.uiController) {
+                    const stats = window.uiController.getCacheStats();
+                    if (stats) {
+                        console.log('Cache Stats:', stats);
+                    }
+                }
+            }, 10000);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,976 @@
+/* DNS Checker Specific Styles */
+
+/* DNS Input Section */
+.dns-input-section {
+    margin-bottom: 3rem;
+}
+
+.input-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.dns-form {
+    background-color: var(--background-color);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+/* Input and Button Group Layout */
+.input-button-group {
+    display: flex;
+    gap: 0.75rem;
+    align-items: stretch;
+}
+
+.input-button-group .form-input {
+    flex: 1;
+    margin: 0;
+}
+
+.input-button-group .btn {
+    flex-shrink: 0;
+    height: auto;
+    min-height: 2.75rem;
+}
+
+.input-validation {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    min-height: 1.25rem;
+}
+
+.input-validation.error {
+    color: var(--error-color);
+}
+
+.input-validation.success {
+    color: var(--success-color);
+}
+
+/* Loading States */
+.loading-section {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.btn-loading {
+    display: none;
+}
+
+.btn.loading .btn-text {
+    display: none;
+}
+
+.btn.loading .btn-loading {
+    display: inline;
+}
+
+/* Results Section */
+.dns-results-section {
+    margin-top: 3rem;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.results-header h2 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+/* Error Summary - Responsive to Content */
+.error-summary {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 2rem;
+    min-height: auto;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.error-summary h3 {
+    color: var(--error-color);
+    margin: 0 0 1rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+/* Error Statistics Bar */
+.error-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.error-stats .stat {
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.error-stats .stat.critical {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.error-stats .stat.warning {
+    background-color: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fed7aa;
+}
+
+.error-stats .stat.info {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+/* Error Items Container */
+.error-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.error-item, .error-message, .warning-message, .info-message {
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    border-left: 4px solid;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.error-item.error, .error-message {
+    background-color: #fef2f2;
+    border-left-color: #dc2626;
+}
+
+.error-item.warning, .warning-message {
+    background-color: #fffbeb;
+    border-left-color: #d97706;
+}
+
+.error-item.info, .info-message {
+    background-color: #eff6ff;
+    border-left-color: #2563eb;
+}
+
+/* Error Item Content */
+.error-item strong, .error-message strong, .warning-message strong, .info-message strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.error-item p, .error-message p, .warning-message p, .info-message p {
+    margin: 0.5rem 0;
+    line-height: 1.5;
+    font-size: 0.875rem;
+    word-wrap: break-word;
+    hyphens: auto;
+    overflow-wrap: break-word;
+}
+
+/* DNS Records Container */
+.dns-records-container {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.dns-record-section {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    min-height: 4rem;
+}
+
+/* Enhanced DNS Results Display */
+.dns-results {
+    max-width: none;
+    width: 100%;
+}
+
+.dns-record-list {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1rem 0;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+/* Scrollbar styling for DNS record lists */
+.dns-record-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dns-record-list::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.dns-record-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.dns-record-list::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Special styling for TXT records with more scrolling */
+.dns-record-list.txt-records {
+    max-height: 300px;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    background-color: #fafafa;
+}
+
+.txt-records .dns-record {
+    margin-bottom: 0.5rem;
+}
+
+.txt-records .dns-record:last-child {
+    margin-bottom: 0;
+}
+
+.dns-record {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: 1rem;
+    align-items: center;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875rem;
+}
+
+.dns-record-name {
+    font-weight: 600;
+    color: #374151;
+    word-break: break-all;
+}
+
+.dns-record-value {
+    color: #1f2937;
+    word-break: break-all;
+    background-color: white;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid #d1d5db;
+}
+
+.dns-record-ttl {
+    color: #6b7280;
+    font-size: 0.75rem;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.dns-record-header {
+    background-color: var(--surface-color);
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.15s ease-in-out;
+    min-height: 3.5rem;
+}
+
+.dns-record-header:hover {
+    background-color: #e2e8f0;
+}
+
+.dns-record-title {
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.record-count {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.collapse-icon {
+    transition: transform 0.15s ease-in-out;
+}
+
+.dns-record-section.collapsed .collapse-icon {
+    transform: rotate(-90deg);
+}
+
+.dns-record-content {
+    padding: 2rem 1.5rem;
+    display: block;
+    min-height: 6rem;
+}
+
+.dns-record-section.collapsed .dns-record-content {
+    display: none;
+}
+
+.collapsible-body {
+    min-height: 4rem;
+}
+
+.dns-record-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.dns-record-table th,
+.dns-record-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dns-record-table th {
+    background-color: var(--surface-color);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.dns-record-table td {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875rem;
+}
+
+.no-records {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 2rem;
+}
+
+/* Record Type Badges */
+.record-type-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.record-type-a { background-color: #dbeafe; color: #1e40af; }
+.record-type-aaaa { background-color: #e0e7ff; color: #3730a3; }
+.record-type-cname { background-color: #f3e8ff; color: #6b21a8; }
+.record-type-mx { background-color: #ecfdf5; color: #065f46; }
+.record-type-txt { background-color: #fef3c7; color: #92400e; }
+.record-type-ns { background-color: #fce7f3; color: #be185d; }
+.record-type-soa { background-color: #f0f9ff; color: #0c4a6e; }
+.record-type-ptr { background-color: #f5f3ff; color: #5b21b6; }
+.record-type-srv { background-color: #fdf4ff; color: #86198f; }
+
+/* Enhanced Error Handling Styles */
+
+/* Status Indicators */
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.status-error {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.status-warning {
+    background-color: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fed7aa;
+}
+
+.status-success {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.status-empty {
+    background-color: #f8fafc;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+/* Results Statistics */
+.results-stats {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.stat-success {
+    color: #16a34a;
+    font-weight: 500;
+}
+
+.stat-failure {
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.stat-empty {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.stat-info {
+    color: #0ea5e9;
+    font-weight: 500;
+}
+
+/* Partial Results Notice - Responsive */
+.partial-results-notice {
+    background-color: #fffbeb;
+    border: 1px solid #fed7aa;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.partial-results-notice .status-indicator {
+    margin-bottom: 0.75rem;
+}
+
+.partial-results-notice p {
+    margin: 0.5rem 0;
+    line-height: 1.5;
+}
+
+.partial-results-notice strong {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* Enhanced Error Messages */
+.error-message {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.error-suggestions {
+    margin-top: 1rem;
+}
+
+.error-suggestions ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.error-suggestions li {
+    margin-bottom: 0.25rem;
+    color: var(--text-secondary);
+}
+
+.error-actions, .notice-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.error-actions .btn, .notice-actions .btn {
+    flex-shrink: 0;
+}
+
+/* Enhanced Empty States */
+.empty-state.enhanced {
+    text-align: center;
+    padding: 2.5rem;
+    background-color: #f8fafc;
+    border-radius: var(--border-radius);
+    border: 2px dashed #e2e8f0;
+    margin: 1rem 0;
+}
+
+.empty-state.enhanced .empty-state-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state.enhanced h4 {
+    margin: 0 0 0.75rem 0;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+}
+
+.empty-explanation {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.empty-impact {
+    color: #d97706;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.empty-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* DNS Record Section Status Classes */
+.dns-record-section.status-error {
+    border-left: 4px solid #dc2626;
+}
+
+.dns-record-section.status-success {
+    border-left: 4px solid #16a34a;
+}
+
+.dns-record-section.status-empty {
+    border-left: 4px solid #64748b;
+}
+
+.dns-record-section.status-error .record-count {
+    background-color: #dc2626;
+}
+
+.dns-record-section.status-success .record-count {
+    background-color: #16a34a;
+}
+
+.dns-record-section.status-empty .record-count {
+    background-color: #64748b;
+}
+
+/* Button Variants */
+.btn-small {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+}
+
+.btn-secondary {
+    background-color: #f8fafc;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-secondary:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+/* Fix button loading state formatting */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.btn .loading-spinner {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+    margin: 0;
+}
+
+.btn-loading {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn.loading .btn-text {
+    display: none;
+}
+
+.btn.loading .btn-loading {
+    display: inline-flex;
+}
+
+/* Loading States */
+.loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.loading-state .loading-spinner {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+}
+
+/* Lazy Loading */
+.lazy-placeholder {
+    text-align: center;
+    padding: 1.5rem;
+    color: #3b82f6;
+    font-style: italic;
+    background-color: #f8fafc;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    border: 2px dashed #e2e8f0;
+    font-weight: 500;
+}
+
+.lazy-placeholder:hover {
+    background-color: #eff6ff;
+    border-color: #3b82f6;
+    color: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.collapsible-content {
+    display: none !important;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.collapsible-content.expanded {
+    display: block !important;
+}
+
+/* Force collapsed state by default */
+.dns-record-section .collapsible-content {
+    display: none !important;
+}
+
+.dns-record-section .collapsible-content.expanded {
+    display: block !important;
+}
+
+/* Collapsible Header Styles */
+.collapsible-header {
+    background-color: var(--surface-color);
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.15s ease-in-out;
+    min-height: 3.5rem;
+}
+
+.collapsible-header:hover {
+    background-color: #e2e8f0;
+}
+
+.collapsible-title {
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.collapsible-toggle {
+    font-size: 1.2rem;
+    transition: transform 0.2s ease-in-out;
+    color: #6b7280;
+}
+
+/* Modal Styles for Help */
+.record-help-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal-content {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+}
+
+.modal-close:hover {
+    background-color: var(--surface-color);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-body h4 {
+    color: var(--text-primary);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-body ol, .modal-body ul {
+    padding-left: 1.5rem;
+}
+
+.modal-body li {
+    margin-bottom: 0.5rem;
+}
+
+.modal-body code {
+    background-color: var(--surface-color);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875rem;
+}
+
+/* Entry Footer Styling */
+.entry-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-align: center;
+}
+
+/* Input Validation Enhanced */
+.input-validation.valid {
+    color: #16a34a;
+}
+
+.input-validation.invalid {
+    color: #dc2626;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dns-form {
+        padding: 1.5rem;
+    }
+    
+    .input-button-group {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .input-button-group .btn {
+        min-height: 2.5rem;
+    }
+    
+    .results-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .results-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .dns-record {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        text-align: left;
+    }
+    
+    .dns-record-ttl {
+        text-align: left;
+    }
+    
+    .dns-record-table {
+        font-size: 0.75rem;
+    }
+    
+    .dns-record-table th,
+    .dns-record-table td {
+        padding: 0.5rem;
+    }
+    
+    .dns-record-header {
+        padding: 1rem;
+    }
+    
+    .dns-record-content {
+        padding: 1.5rem 1rem;
+    }
+    
+    .error-actions, .notice-actions, .empty-actions {
+        flex-direction: column;
+    }
+    
+    /* Error Summary Responsive */
+    .error-summary {
+        padding: 1rem 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .error-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .error-stats .stat {
+        text-align: center;
+        padding: 0.5rem;
+    }
+    
+    .error-item, .error-message, .warning-message, .info-message {
+        padding: 0.75rem;
+    }
+    
+    .partial-results-notice {
+        padding: 0.75rem;
+    }
+    
+    .modal-content {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .dns-record-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .empty-state.enhanced {
+        padding: 1.5rem 1rem;
+    }
+    
+    .record-help-modal {
+        padding: 0.5rem;
+    }
+    
+    /* Error Summary for Small Screens */
+    .error-summary {
+        padding: 0.75rem 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .error-summary h3 {
+        font-size: 1rem;
+    }
+    
+    .error-item, .error-message, .warning-message, .info-message {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .error-stats .stat {
+        font-size: 0.7rem;
+        padding: 0.375rem 0.5rem;
+    }
+    
+    .status-indicator {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+}

@@ -1,0 +1,47 @@
+{
+  "name": "dns-checker",
+  "version": "1.0.0",
+  "description": "Comprehensive DNS record analysis tool with error detection capabilities",
+  "main": "src/index.html",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "python -m http.server 8000 --directory src",
+    "dev:node": "npx http-server src -p 8000 -c-1",
+    "clean": "node -e \"const fs = require('fs'); const path = require('path'); if (fs.existsSync('build')) { fs.rmSync('build', { recursive: true, force: true }); } console.log('Build directory cleaned');\"",
+    "prebuild": "npm run clean",
+    "serve": "npx http-server build -p 9000 -c-1",
+    "test": "echo \"Tests will be implemented in task 9\"",
+    "lint": "echo \"Linting will be configured if needed\""
+  },
+  "keywords": [
+    "dns",
+    "dns-checker",
+    "dns-analysis",
+    "dns-records",
+    "cloudflare-pages",
+    "static-site"
+  ],
+  "author": "ElasticStrike",
+  "license": "MIT",
+  "devDependencies": {
+    "terser": "^5.24.0",
+    "clean-css": "^5.3.2",
+    "html-minifier-terser": "^7.2.0",
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elasticstrike/dns-checker.git"
+  },
+  "homepage": "https://dns.elasticstrike.com",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}
