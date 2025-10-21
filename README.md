@@ -1,41 +1,32 @@
 # DNS Checker
 
-A comprehensive DNS record analysis tool with intelligent error detection capabilities, built for deployment on Cloudflare Pages. Features client-side DNS-over-HTTPS queries, subdomain support, performance optimizations, and requires no server-side compute.
+A DNS record analysis tool with error detection capabilities, built for deployment on Cloudflare Pages. Uses client-side DNS-over-HTTPS queries and requires no server-side compute.
 
-## ✨ Features
+## Features
 
-- 🔍 **Complete DNS Analysis**: Query all major DNS record types (A, AAAA, CNAME, MX, TXT, NS, SOA, PTR, SRV)
-- 🛡️ **Intelligent Error Detection**: Automated analysis of DNS configuration issues for main domains
-- 🌐 **Subdomain Support**: Query subdomains without configuration noise
-- ⚡ **Performance Optimized**: DNS result caching, request debouncing, and lazy loading
-- 📱 **Responsive Design**: Works perfectly on desktop, tablet, and mobile
-- 🎨 **Hugo Theme Integration**: Clean, professional interface matching Hugo PaperMod theme
-- 🔒 **Secure**: Client-side DNS-over-HTTPS queries with CSP protection
-- 🚀 **Fast**: Global CDN deployment with edge caching
+- Query all major DNS record types (A, AAAA, CNAME, MX, TXT, NS, SOA, PTR, SRV)
+- Automated analysis of DNS configuration issues for main domains
+- Subdomain support without configuration analysis
+- DNS result caching and request debouncing
+- Responsive design for desktop and mobile
+- Hugo PaperMod theme integration
+- Client-side DNS-over-HTTPS queries with CSP protection
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Local Development
 ```bash
-# Clone and setup
 git clone <your-repo-url>
 cd dns-checker
 npm install
-
-# Start development server
 npm run dev
-
-# Build for production
-npm run build
-npm run serve
 ```
 
-### Deploy to Cloudflare Pages
-1. Push code to GitHub/GitLab
-2. Connect repository to Cloudflare Pages
-3. Set build command: `npm run build`
-4. Set build output directory: `build`
-5. Deploy! 🎉 
+### Build for Production
+```bash
+npm run build
+npm run serve
+``` 
 
 ## Project Structure
 
@@ -243,13 +234,13 @@ The build process automatically generates a `_headers` file with:
 #### 7. Verification
 
 After deployment, verify:
-- ✅ Site loads correctly at your Pages URL
-- ✅ DNS queries work (test with a domain like `google.com`)
-- ✅ All DNS record types expand properly
-- ✅ Error detection works for main domains
-- ✅ Subdomain queries work without issue analysis
-- ✅ Mobile responsiveness
-- ✅ HTTPS is enabled automatically
+- Site loads correctly at your Pages URL
+- DNS queries work (test with a domain like `google.com`)
+- All DNS record types expand properly
+- Error detection works for main domains
+- Subdomain queries work without issue analysis
+- Mobile responsiveness
+- HTTPS is enabled automatically
 
 #### 8. Troubleshooting
 
@@ -272,40 +263,38 @@ After deployment, verify:
 
 **Build Command Verification:**
 ```bash
-# Test locally before deploying
 npm install
 npm run build
 npm run serve
-# Test at http://localhost:9000
 ```
 
 #### 9. Performance Optimization
 
 Cloudflare Pages provides:
-- **Global CDN**: Automatic edge caching
-- **HTTP/3**: Latest protocol support
-- **Brotli Compression**: Automatic compression
-- **Smart Routing**: Optimal performance routing
+- Global CDN with automatic edge caching
+- HTTP/3 protocol support
+- Brotli compression
+- Performance routing
 
 #### 10. Monitoring
 
 Monitor your deployment:
-- **Analytics**: Available in Pages dashboard
-- **Real User Monitoring**: Enable in Cloudflare dashboard
-- **Error Tracking**: Check browser console and Pages logs
+- Analytics available in Pages dashboard
+- Real User Monitoring in Cloudflare dashboard
+- Error tracking via browser console and Pages logs
 
 ## Implementation Status
 
-- ✅ **Project structure and build system**
-- ✅ **DNS query engine with DoH API integration** (Cloudflare, Google, Quad9)
-- ✅ **Comprehensive error detection and analysis**
-- ✅ **Hugo theme-consistent UI with responsive design**
-- ✅ **Performance optimizations** (caching, debouncing, lazy loading)
-- ✅ **Subdomain support with smart issue detection**
-- ✅ **Security headers and CSP configuration**
-- ✅ **Mobile-responsive interface**
-- ✅ **DNS record type validation and parsing**
-- ✅ **Cloudflare Pages deployment configuration**
+- Project structure and build system
+- DNS query engine with DoH API integration (Cloudflare, Google, Quad9)
+- Error detection and analysis
+- Hugo theme-consistent UI with responsive design
+- Performance optimizations (caching, debouncing, lazy loading)
+- Subdomain support with conditional issue detection
+- Security headers and CSP configuration
+- Mobile-responsive interface
+- DNS record type validation and parsing
+- Cloudflare Pages deployment configuration
 
 ## Technology Stack
 
