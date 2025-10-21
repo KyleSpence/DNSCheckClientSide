@@ -140,148 +140,23 @@ const config = {
 
 ### Cloudflare Pages Deployment
 
-This project is designed for deployment on Cloudflare Pages. Follow these steps:
-
-#### 1. Prerequisites
-- Cloudflare account
-- GitHub repository with this code
-- Domain configured in Cloudflare (optional)
-
-#### 2. Create Cloudflare Pages Project
-
-1. **Login to Cloudflare Dashboard**
-   - Go to [dash.cloudflare.com](https://dash.cloudflare.com)
-   - Navigate to **Pages** in the sidebar
-
-2. **Connect to Git**
-   - Click **"Create a project"**
-   - Select **"Connect to Git"**
-   - Choose your Git provider (GitHub/GitLab)
-   - Select your DNS Checker repository
-
-3. **Configure Build Settings**
-   ```
-   Project name: dns-checker (or your preferred name)
-   Production branch: main
-   Build command: npm run build
-   Build output directory: build
-   Root directory: (leave empty)
-   ```
-
-4. **Environment Variables**
-   - No environment variables required (client-side application)
-
-5. **Advanced Settings**
-   ```
-   Node.js version: 18.x
-   Build timeout: 10 minutes (default)
-   ```
-
-#### 3. Build Configuration Details
-
-**Required Build Settings in Cloudflare Pages:**
-- **Framework preset**: None (or Custom)
-- **Build command**: `npm run build`
-- **Build output directory**: `build`
-- **Root directory**: `/` (leave empty)
-- **Node.js version**: `18.x` or higher
-
-#### 4. Custom Domain Setup (Optional)
-
-1. **Add Custom Domain**:
-   - In your Pages project, go to **Custom domains**
-   - Click **"Set up a custom domain"**
-   - Enter your domain (e.g., `dns.yourdomain.com`)
-
-2. **DNS Configuration**:
-   - Add a CNAME record pointing to your Pages URL
-   - Or use Cloudflare's automatic DNS setup
-
-#### 5. Security Headers
-
-The build process automatically generates a `_headers` file with:
-
-```
-/*
-  X-Frame-Options: DENY
-  X-Content-Type-Options: nosniff
-  X-XSS-Protection: 1; mode=block
-  Referrer-Policy: strict-origin-when-cross-origin
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://cloudflare-dns.com https://dns.google https://dns.quad9.net
-
-/*.js
-  Cache-Control: public, max-age=31536000, immutable
-
-/*.css
-  Cache-Control: public, max-age=31536000, immutable
-
-/*.html
-  Cache-Control: public, max-age=3600
-```
-
-#### 6. Deployment Process
-
-1. **Automatic Deployment**:
-   - Push changes to your main branch
-   - Cloudflare Pages automatically builds and deploys
-   - Build logs available in the Pages dashboard
-
-2. **Manual Deployment**:
-   - Go to your Pages project dashboard
-   - Click **"Create deployment"**
-   - Select branch and deploy
-
-#### 7. Verification
-
-After deployment, verify:
-- Site loads correctly at your Pages URL
-- DNS queries work (test with a domain like `google.com`)
-- All DNS record types expand properly
-- Error detection works for main domains
-- Subdomain queries work without issue analysis
-- Mobile responsiveness
-- HTTPS is enabled automatically
-
-#### 8. Troubleshooting
-
-**Common Issues:**
-
-1. **Build Fails**:
-   - Check Node.js version is 18.x+
-   - Verify `npm run build` works locally
-   - Check build logs in Pages dashboard
-
-2. **DNS Queries Don't Work**:
-   - Verify CSP headers allow DoH providers
-   - Check browser console for CORS errors
-   - Test with different DNS providers
-
-3. **Assets Not Loading**:
-   - Verify build output directory is `build`
-   - Check file paths are relative
-   - Ensure all assets are in the build directory
-
-**Build Command Verification:**
+#### 1. Build Locally
 ```bash
 npm install
 npm run build
-npm run serve
 ```
 
-#### 9. Performance Optimization
+#### 2. Deploy to Cloudflare Pages
+1. Go to [dash.cloudflare.com](https://dash.cloudflare.com)
+2. Navigate to **Pages**
+3. Click **"Create a project"**
+4. Select **"Upload assets"**
+5. Upload all files from the `build/` folder
+6. Deploy
 
-Cloudflare Pages provides:
-- Global CDN with automatic edge caching
-- HTTP/3 protocol support
-- Brotli compression
-- Performance routing
-
-#### 10. Monitoring
-
-Monitor your deployment:
-- Analytics available in Pages dashboard
-- Real User Monitoring in Cloudflare dashboard
-- Error tracking via browser console and Pages logs
+#### 3. Custom Domain (Optional)
+- In your Pages project, go to **Custom domains**
+- Add your domain and configure DNS
 
 ## Implementation Status
 
