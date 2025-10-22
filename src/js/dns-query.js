@@ -28,8 +28,8 @@ class DNSQueryEngine {
             SRV: 33
         };
 
-        // Domain validation regex pattern
-        this.domainRegex = /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)*[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
+        // Domain validation regex pattern (allows underscores like _dmarc)
+        this.domainRegex = /^(?:[a-zA-Z0-9_](?:[a-zA-Z0-9-_]{0,61}[a-zA-Z0-9_])?\.)*[a-zA-Z0-9_](?:[a-zA-Z0-9-_]{0,61}[a-zA-Z0-9_])?$/;
 
         // Configuration
         this.timeout = 10000; // 10 seconds timeout
@@ -44,24 +44,27 @@ class DNSQueryEngine {
     }
 
     /**
-     * Validates domain name format
-     * @param {string} domain - Domain name to validate
-     * @returns {boolean} - True if domain is valid
+     * Validates domain name format.
+     * Allows underscores (e.g., _dmarc.example.com)
+     * and trailing dots (common in DNS records).
+     * 
+     * @param {string} domain - Domain name to validate.
+     * @returns {boolean} - True if the domain is valid.
      */
     validateDomain(domain) {
-        if (!domain || typeof domain !== 'string') {
+        if (typeof domain !== 'string' || !domain.trim()) {
             return false;
         }
 
-        // Remove trailing dot if present
-        const cleanDomain = domain.replace(/\.$/, '');
-        
-        // Check length constraints
+        // Normalize domain: trim spaces and remove trailing dot
+        const cleanDomain = domain.trim().replace(/\.$/, '');
+
+        // Check overall length (max 253 chars per RFC)
         if (cleanDomain.length === 0 || cleanDomain.length > 253) {
             return false;
         }
 
-        // Check each label length (max 63 characters)
+        // Check each label's length (1–63 chars)
         const labels = cleanDomain.split('.');
         for (const label of labels) {
             if (label.length === 0 || label.length > 63) {
@@ -69,8 +72,12 @@ class DNSQueryEngine {
             }
         }
 
-        return this.domainRegex.test(cleanDomain);
+        // Updated regex: allows underscores and hyphens within labels
+        const domainRegex = /^(?:[a-zA-Z0-9_](?:[a-zA-Z0-9-_]{0,61}[a-zA-Z0-9_])?\.)*[a-zA-Z0-9_](?:[a-zA-Z0-9-_]{0,61}[a-zA-Z0-9_])?$/;
+
+        return domainRegex.test(cleanDomain);
     }
+
 
     /**
      * Performs DNS query for a specific record type using DoH API with fallback

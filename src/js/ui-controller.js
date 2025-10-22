@@ -16,8 +16,8 @@ class UIController {
         this.currentDomain = null;
         this.isAnalyzing = false;
         
-        // Domain validation regex (allows subdomains)
-        this.domainRegex = /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)*[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
+        // Domain validation regex (allows subdomains and underscores for _dmarc, _domainkey, etc.)
+        this.domainRegex = /^(?:[a-zA-Z0-9_](?:[a-zA-Z0-9_-]{0,61}[a-zA-Z0-9_])?\.)*[a-zA-Z0-9_](?:[a-zA-Z0-9_-]{0,61}[a-zA-Z0-9_])?$/;
         
         // Performance optimizations - debouncing
         this.debounceTimers = new Map();
@@ -528,32 +528,24 @@ class UIController {
         const recordTypes = ['A', 'AAAA', 'CNAME', 'MX', 'TXT', 'NS', 'SOA', 'PTR', 'SRV'];
         let recordsHTML = '';
 
-        // Add DMARC section first if we have TXT records (to extract DMARC from them)
-        const dmarcData = this.extractDMARCFromTXT(dnsData);
-        if (dmarcData) {
-            const hasRecords = dmarcData.records && dmarcData.records.length > 0;
-            const hasError = dmarcData.error;
-            const statusClass = hasError ? 'status-error' : hasRecords ? 'status-success' : 'status-empty';
-            const statusIcon = hasError ? '❌' : hasRecords ? '✅' : '📭';
-
-            recordsHTML += `
-                <div class="dns-record-section ${statusClass}" id="section-DMARC" data-record-type="DMARC">
-                    <div class="collapsible-header" role="button" tabindex="0" aria-expanded="false" 
-                         onclick="window.uiController.toggleSection('DMARC', this)">
-                        <h3 class="collapsible-title">
-                            ${statusIcon} DMARC Records 
-                            <span class="record-count ${statusClass}">${hasRecords ? dmarcData.records.length : 0}</span>
-                        </h3>
-                        <span class="collapsible-toggle">▶</span>
-                    </div>
-                    <div class="collapsible-content">
-                        <div class="collapsible-body">
-                            <div class="lazy-placeholder" onclick="window.uiController.loadLazySection('DMARC', this)">Click to load DMARC records...</div>
-                        </div>
+        // Add DMARC section (always show it, will query _dmarc subdomain when expanded)
+        recordsHTML += `
+            <div class="dns-record-section status-empty" id="section-DMARC" data-record-type="DMARC">
+                <div class="collapsible-header" role="button" tabindex="0" aria-expanded="false" 
+                     onclick="window.uiController.toggleSection('DMARC', this)">
+                    <h3 class="collapsible-title">
+                        🛡️ DMARC Records 
+                        <span class="record-count status-empty">?</span>
+                    </h3>
+                    <span class="collapsible-toggle">▶</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="collapsible-body">
+                        <div class="lazy-placeholder" onclick="window.uiController.loadLazySection('DMARC', this)">Click to load DMARC records...</div>
                     </div>
                 </div>
-            `;
-        }
+            </div>
+        `;
 
         for (const recordType of recordTypes) {
             const recordData = dnsData[recordType];
@@ -1402,7 +1394,7 @@ class UIController {
     /**
      * Gets stored record data for lazy loading
      * @param {string} recordType - DNS record type
-     * @returns {Object|null} - Record data or null
+     * @returns {Object|Promise<Object>|null} - Record data or null
      */
     getStoredRecordData(recordType) {
         if (recordType === 'DMARC') {
@@ -1412,38 +1404,57 @@ class UIController {
     }
 
     /**
-     * Extracts DMARC records from TXT records
-     * @param {Object} dnsData - DNS data
-     * @returns {Object|null} - DMARC record data or null
+     * Extracts DMARC records by querying _dmarc subdomain
+     * @param {Object} dnsData - DNS data (not used, but kept for compatibility)
+     * @returns {Promise<Object>} - DMARC record data or placeholder
      */
-    extractDMARCFromTXT(dnsData) {
-        if (!dnsData || !dnsData.TXT || !dnsData.TXT.records) {
+    async extractDMARCFromTXT(dnsData) {
+        if (!this.currentDomain) {
             return {
                 records: [],
-                error: 'DMARC records are located at _dmarc.domain.com and not visible in main domain query',
+                error: 'No domain specified for DMARC query',
                 timestamp: new Date().toISOString(),
-                source: 'extracted'
+                source: 'error'
             };
         }
 
-        const dmarcRecords = dnsData.TXT.records.filter(record => 
-            record.data.toLowerCase().includes('v=dmarc1')
-        );
+        // First check if there are DMARC records in the main domain TXT records
+        if (dnsData && dnsData.TXT && dnsData.TXT.records) {
+            const dmarcRecords = dnsData.TXT.records.filter(record => 
+                /v=dmarc1/i.test(record.data)
+            );
 
-        if (dmarcRecords.length === 0) {
-            return {
-                records: [],
-                error: null,
-                timestamp: new Date().toISOString(),
-                source: 'extracted',
-                note: 'DMARC records are typically located at _dmarc.domain.com'
-            };
+            if (dmarcRecords.length > 0) {
+                return {
+                    records: dmarcRecords,
+                    timestamp: new Date().toISOString(),
+                    source: 'main domain TXT records'
+                };
+            }
+        }
+
+        // Try to query _dmarc subdomain
+        try {
+            const dmarcDomain = `_dmarc.${this.currentDomain}`;
+            const dmarcResult = await this.dnsEngine.queryDNS(dmarcDomain, 'TXT');
+            
+            if (dmarcResult && dmarcResult.records && dmarcResult.records.length > 0) {
+                return {
+                    records: dmarcResult.records,
+                    timestamp: new Date().toISOString(),
+                    source: `_dmarc.${this.currentDomain}`
+                };
+            }
+        } catch (error) {
+            // DMARC query failed, which is normal if no DMARC record exists
         }
 
         return {
-            records: dmarcRecords,
+            records: [],
+            error: null,
             timestamp: new Date().toISOString(),
-            source: 'extracted from TXT'
+            source: 'not found',
+            note: `DMARC records should be located at _dmarc.${this.currentDomain}`
         };
     }
 
@@ -1452,31 +1463,72 @@ class UIController {
      * @param {string} recordType - DNS record type
      * @param {Element} placeholder - Placeholder element that was clicked
      */
-    loadLazySection(recordType, placeholder) {
+    async loadLazySection(recordType, placeholder) {
         const section = placeholder.closest('.dns-record-section');
-        const recordData = this.getStoredRecordData(recordType);
+        const body = placeholder.closest('.collapsible-body');
         
-        if (recordData) {
-            // Replace placeholder with actual content
-            const body = placeholder.closest('.collapsible-body');
-            const generatedContent = this.generateRecordContent(recordType, recordData);
+        // Show loading state
+        body.innerHTML = `
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <span>Loading ${recordType} records...</span>
+            </div>
+        `;
+        
+        try {
+            const recordData = await this.getStoredRecordData(recordType);
             
-            body.innerHTML = generatedContent;
-            this.loadedSections.add(recordType);
+            if (recordData) {
+                // Replace loading with actual content
+                const generatedContent = this.generateRecordContent(recordType, recordData);
+                body.innerHTML = generatedContent;
+                this.loadedSections.add(recordType);
+                
+                // Update the record count in the header
+                const recordCount = recordData.records ? recordData.records.length : 0;
+                const hasRecords = recordCount > 0;
+                const hasError = recordData.error;
+                
+                const countElement = section.querySelector('.record-count');
+                if (countElement) {
+                    countElement.textContent = recordCount;
+                    countElement.className = `record-count ${hasError ? 'status-error' : hasRecords ? 'status-success' : 'status-empty'}`;
+                }
+                
+                // Update section status class
+                section.className = `dns-record-section ${hasError ? 'status-error' : hasRecords ? 'status-success' : 'status-empty'}`;
+                
+                // Ensure the section is expanded
+                const header = section.querySelector('.collapsible-header');
+                const content = section.querySelector('.collapsible-content');
+                const toggle = header.querySelector('.collapsible-toggle');
+                
+                header.setAttribute('aria-expanded', 'true');
+                content.classList.add('expanded');
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+            } else {
+                // Show error if no data available
+                body.innerHTML = '<div class="error-message">No data available for ' + recordType + ' records</div>';
+                
+                // Update record count to show 0 for no data
+                const countElement = section.querySelector('.record-count');
+                if (countElement) {
+                    countElement.textContent = '0';
+                    countElement.className = 'record-count status-empty';
+                }
+                section.className = 'dns-record-section status-empty';
+            }
+        } catch (error) {
+            body.innerHTML = '<div class="error-message">Failed to load ' + recordType + ' records: ' + error.message + '</div>';
             
-            // Ensure the section is expanded
-            const header = section.querySelector('.collapsible-header');
-            const content = section.querySelector('.collapsible-content');
-            const toggle = header.querySelector('.collapsible-toggle');
-            
-            header.setAttribute('aria-expanded', 'true');
-            content.classList.add('expanded');
-            content.style.display = 'block';
-            toggle.textContent = '▼';
-        } else {
-            // Show error if no data available
-            placeholder.innerHTML = 'No data available for ' + recordType + ' records';
-            placeholder.style.color = '#dc2626';
+            // Update record count to show error state
+            const countElement = section.querySelector('.record-count');
+            if (countElement) {
+                countElement.textContent = '!';
+                countElement.className = 'record-count status-error';
+            }
+            section.className = 'dns-record-section status-error';
         }
     }
 }

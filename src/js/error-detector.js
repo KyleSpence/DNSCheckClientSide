@@ -33,7 +33,7 @@ class DNSErrorDetector {
         // Common security record patterns
         this.securityRecordPatterns = {
             SPF: /^v=spf1\s/i,
-            DMARC: /^v=DMARC1\s/i,
+            DMARC: /^v=dmarc1\s/i,
             DKIM: /^v=DKIM1\s/i
         };
     }
@@ -383,7 +383,7 @@ class DNSErrorDetector {
 
         // Check for DMARC records - they should be at _dmarc.domain.com (not visible in main domain query)
         const dmarcRecords = txtRecords.filter(record => 
-            record.data.toLowerCase().includes('v=dmarc1')
+            /v=dmarc1/i.test(record.data)
         );
 
         if (dmarcRecords.length === 0) {
