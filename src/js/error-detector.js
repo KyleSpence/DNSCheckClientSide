@@ -22,7 +22,7 @@ class DNSErrorDetector {
             INFO: 'info'
         };
 
-        // TTL validation thresholds (in seconds)
+        // TTL validation thresholds (disabled)
         this.ttlThresholds = {
             MIN_RECOMMENDED: 300,     // 5 minutes
             MAX_RECOMMENDED: 86400,   // 24 hours
@@ -113,59 +113,11 @@ class DNSErrorDetector {
     /**
      * Validates TTL values across all DNS records
      * @param {Object} dnsRecords - DNS records organized by type
-     * @returns {Array} - Array of TTL-related warnings and errors
+     * @returns {Array} - Array of TTL-related warnings and errors (disabled)
      */
     analyzeTTL(dnsRecords) {
-        const issues = [];
-
-        for (const [recordType, recordData] of Object.entries(dnsRecords)) {
-            if (!recordData.records || recordData.records.length === 0) {
-                continue;
-            }
-
-            for (const record of recordData.records) {
-                const ttl = record.ttl;
-
-                if (ttl < this.ttlThresholds.VERY_LOW) {
-                    issues.push({
-                        type: this.errorTypes.INVALID_TTL,
-                        severity: this.severityLevels.WARNING,
-                        message: `Very low TTL value (${ttl}s) for ${recordType} record`,
-                        description: 'Extremely low TTL values can cause excessive DNS queries and poor performance',
-                        recommendation: `Consider increasing TTL to at least ${this.ttlThresholds.MIN_RECOMMENDED}s`,
-                        affectedRecords: [recordType],
-                        recordName: record.name,
-                        currentValue: ttl
-                    });
-                } else if (ttl < this.ttlThresholds.MIN_RECOMMENDED) {
-                    issues.push({
-                        type: this.errorTypes.INVALID_TTL,
-                        severity: this.severityLevels.INFO,
-                        message: `Low TTL value (${ttl}s) for ${recordType} record`,
-                        description: 'Low TTL values increase DNS query frequency',
-                        recommendation: `Consider using TTL of ${this.ttlThresholds.MIN_RECOMMENDED}s or higher for better performance`,
-                        affectedRecords: [recordType],
-                        recordName: record.name,
-                        currentValue: ttl
-                    });
-                }
-
-                if (ttl > this.ttlThresholds.VERY_HIGH) {
-                    issues.push({
-                        type: this.errorTypes.INVALID_TTL,
-                        severity: this.severityLevels.INFO,
-                        message: `Very high TTL value (${ttl}s) for ${recordType} record`,
-                        description: 'Very high TTL values can delay DNS changes propagation',
-                        recommendation: `Consider using TTL of ${this.ttlThresholds.MAX_RECOMMENDED}s or lower for faster updates`,
-                        affectedRecords: [recordType],
-                        recordName: record.name,
-                        currentValue: ttl
-                    });
-                }
-            }
-        }
-
-        return issues;
+        // TTL validation disabled - return empty array
+        return [];
     }
 
     /**
@@ -176,7 +128,7 @@ class DNSErrorDetector {
      */
     detectCircularCNAME(dnsRecords, domain) {
         const errors = [];
-        
+
         if (!dnsRecords.CNAME || !dnsRecords.CNAME.records || dnsRecords.CNAME.records.length === 0) {
             return errors;
         }
@@ -262,7 +214,7 @@ class DNSErrorDetector {
 
         for (const mxRecord of mxRecords) {
             const mxData = mxRecord.data.split(' ');
-            
+
             if (mxData.length < 2) {
                 errors.push({
                     type: this.errorTypes.CONFIGURATION_ERROR,
@@ -343,7 +295,7 @@ class DNSErrorDetector {
         let hasDKIM = false;
 
         // Check for SPF records - look for v=spf1 anywhere in the TXT record
-        const spfRecords = txtRecords.filter(record => 
+        const spfRecords = txtRecords.filter(record =>
             record.data.toLowerCase().includes('v=spf1')
         );
 
@@ -359,7 +311,7 @@ class DNSErrorDetector {
             });
         } else {
             hasSPF = true;
-            
+
             // Validate SPF record syntax
             for (const spfRecord of spfRecords) {
                 const spfIssues = this.validateSPFRecord(spfRecord);
@@ -382,7 +334,7 @@ class DNSErrorDetector {
         }
 
         // Check for DMARC records - they should be at _dmarc.domain.com (not visible in main domain query)
-        const dmarcRecords = txtRecords.filter(record => 
+        const dmarcRecords = txtRecords.filter(record =>
             /v=dmarc1/i.test(record.data)
         );
 
@@ -400,7 +352,7 @@ class DNSErrorDetector {
             });
         } else {
             hasDMARC = true;
-            
+
             // If we found DMARC records in the main domain (unusual but possible), validate them
             for (const dmarcRecord of dmarcRecords) {
                 const dmarcIssues = this.validateDMARCRecord(dmarcRecord);
@@ -409,14 +361,14 @@ class DNSErrorDetector {
         }
 
         // Check for DKIM records - only look for records that contain _domainkey in the name or v=DKIM1 in data
-        const dkimRecords = txtRecords.filter(record => 
-            record.name.toLowerCase().includes('_domainkey') || 
+        const dkimRecords = txtRecords.filter(record =>
+            record.name.toLowerCase().includes('_domainkey') ||
             record.data.toLowerCase().includes('v=dkim1')
         );
 
         if (dkimRecords.length > 0) {
             hasDKIM = true;
-            
+
             // Validate DKIM record syntax
             for (const dkimRecord of dkimRecords) {
                 const dkimIssues = this.validateDKIMRecord(dkimRecord);
@@ -424,10 +376,10 @@ class DNSErrorDetector {
             }
         } else {
             // Only report missing DKIM if we don't see any _domainkey records
-            const domainKeyRecords = txtRecords.filter(record => 
+            const domainKeyRecords = txtRecords.filter(record =>
                 record.name.toLowerCase().includes('_domainkey')
             );
-            
+
             if (domainKeyRecords.length === 0) {
                 issues.push({
                     type: this.errorTypes.MISSING_SECURITY,
@@ -484,7 +436,7 @@ class DNSErrorDetector {
         // Check for proper termination (all, ~all, -all, ?all)
         const terminators = ['all', '~all', '-all', '?all'];
         const hasTerminator = terminators.some(term => spfData.includes(term));
-        
+
         if (!hasTerminator) {
             issues.push({
                 type: this.errorTypes.CONFIGURATION_ERROR,
@@ -527,7 +479,7 @@ class DNSErrorDetector {
         // Parse DMARC record into key-value pairs
         const dmarcPairs = {};
         const pairs = dmarcData.split(';').map(pair => pair.trim());
-        
+
         for (const pair of pairs) {
             const [key, value] = pair.split('=').map(s => s.trim());
             if (key && value) {
@@ -604,7 +556,7 @@ class DNSErrorDetector {
         // Parse DKIM record into key-value pairs
         const dkimPairs = {};
         const pairs = dkimData.split(';').map(pair => pair.trim());
-        
+
         for (const pair of pairs) {
             const [key, value] = pair.split('=').map(s => s.trim());
             if (key && value) {
@@ -660,10 +612,10 @@ class DNSErrorDetector {
      */
     async checkPropagationConsistency(domain, recordTypes = ['A', 'AAAA', 'MX', 'NS']) {
         const issues = [];
-        
+
         // This would require querying multiple DNS servers
         // For now, we'll create a placeholder that could be implemented with multiple DoH providers
-        
+
         issues.push({
             type: this.errorTypes.PROPAGATION_ISSUE,
             severity: this.severityLevels.INFO,
@@ -750,7 +702,7 @@ class DNSErrorDetector {
         };
 
         const securityIssues = this.validateSecurityRecords(dnsRecords, domain);
-        
+
         // Analyze security issues and populate the report
         for (const issue of securityIssues) {
             if (issue.securityType) {
@@ -842,11 +794,11 @@ class DNSErrorDetector {
 
         // Categorize issues
         const allIssues = [...analysisResult.errors, ...analysisResult.warnings, ...analysisResult.info];
-        
+
         for (const issue of allIssues) {
             const category = issue.type;
             const severity = issue.severity;
-            
+
             if (!summary[severity].categories[category]) {
                 summary[severity].categories[category] = [];
             }
@@ -878,7 +830,7 @@ class DNSErrorDetector {
         for (const [issueType, issues] of Object.entries(issuesByType)) {
             const firstIssue = issues[0];
             let priority = 'medium';
-            
+
             if (firstIssue.severity === this.severityLevels.CRITICAL) {
                 priority = 'high';
             } else if (firstIssue.severity === this.severityLevels.INFO) {
@@ -913,14 +865,13 @@ class DNSErrorDetector {
     getRecommendationTitle(issueType) {
         const titles = {
             [this.errorTypes.MISSING_RECORD]: 'Add Missing DNS Records',
-            [this.errorTypes.INVALID_TTL]: 'Optimize TTL Values',
             [this.errorTypes.CIRCULAR_CNAME]: 'Fix CNAME Configuration',
             [this.errorTypes.INVALID_MX]: 'Fix Mail Exchange Records',
             [this.errorTypes.MISSING_SECURITY]: 'Improve Email Security',
             [this.errorTypes.PROPAGATION_ISSUE]: 'Check DNS Propagation',
             [this.errorTypes.CONFIGURATION_ERROR]: 'Fix Configuration Errors'
         };
-        
+
         return titles[issueType] || 'Address DNS Issues';
     }
 
@@ -933,14 +884,13 @@ class DNSErrorDetector {
     getRecommendationDescription(issueType, issues) {
         const descriptions = {
             [this.errorTypes.MISSING_RECORD]: `${issues.length} critical DNS record(s) are missing, which may affect domain functionality`,
-            [this.errorTypes.INVALID_TTL]: `${issues.length} DNS record(s) have suboptimal TTL values that may impact performance`,
             [this.errorTypes.CIRCULAR_CNAME]: `${issues.length} CNAME record(s) create circular references that prevent resolution`,
             [this.errorTypes.INVALID_MX]: `${issues.length} mail exchange record(s) have configuration issues`,
             [this.errorTypes.MISSING_SECURITY]: `${issues.length} email security feature(s) are not configured, leaving the domain vulnerable`,
             [this.errorTypes.PROPAGATION_ISSUE]: `${issues.length} DNS propagation issue(s) detected across different servers`,
             [this.errorTypes.CONFIGURATION_ERROR]: `${issues.length} DNS configuration error(s) need to be corrected`
         };
-        
+
         return descriptions[issueType] || `${issues.length} DNS issue(s) require attention`;
     }
 }
